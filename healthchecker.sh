@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #VARIABLES
-s3_bucket =
+s3_bucket="aws-nasika-logs"
 
 instance_id=$(wget -q -O - http://169.254.169.254/latest/meta-data/instance-id)
 echo "Instance ID is "$instance_id
@@ -32,10 +32,24 @@ else
       break
     fi
   done
-  if [[ "$state" == "false" ]] then
+  if [[ "$state" == "false" ]]; then
      #zip up logs and upload them to S3
-     curl -O https://raw.githubusercontent.com/nithu0115/eks-logs-collector/master/eks-log-collector.sh
+     script="eks-log-collector.sh"
+     if test -f "$script"; then
+        echo "Log collector script already exists..."
+     else
+        curl -O https://raw.githubusercontent.com/nithu0115/eks-logs-collector/master/eks-log-collector.sh
+     fi
      sudo bash eks-log-collector.sh
+     for f in /var/log/eks_i-*.tar.gz
+     do
+       echo $f
+       log_file=$f
+     done
+     #push the logs to the specified S3 bucket
+     aws s3api put-object --bucket $s3_bucket --key $log_file
 
-
+     #terminate the instance so that the ASG can replace the node
+     aws ec2 terminate-instances --instance-ids $instance_id
+  fi
 fi
