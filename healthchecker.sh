@@ -2,6 +2,8 @@
 
 #VARIABLES
 s3_bucket="aws-nasika-logs"
+az=$(wget -q -O - http://169.254.169.254/latest/meta-data/placement/availability-zone)
+region=${az::-1}
 
 instance_id=$(wget -q -O - http://169.254.169.254/latest/meta-data/instance-id)
 echo "Instance ID is "$instance_id
@@ -20,8 +22,9 @@ else
   for i in {1..5}
   do
     echo "Kubelet is inactive, trying to restart... Attempt" [$i]
-    systemctl start kubelet
+    sudo systemctl start kubelet
     sleep 10
+    check=$(systemctl status kubelet | grep "Active")
     if [[ "$check" == *"$Inactive"* ]]; then
       echo "Failed to start kubelet..."
       state="false"
@@ -50,6 +53,6 @@ else
      aws s3api put-object --bucket $s3_bucket --key $log_file
 
      #terminate the instance so that the ASG can replace the node
-     aws ec2 terminate-instances --instance-ids $instance_id
+     aws ec2 terminate-instances --instance-ids $instance_id --region $region
   fi
 fi
