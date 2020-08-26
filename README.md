@@ -21,7 +21,7 @@ This script can be added to the userdata of the worker nodes (i.e. via the launc
 ### How to make the script work
 Once the script is added to the userdata, it will also be important to create a cron for the script to run on a regular schedule. For example, the cron could run the healthchecker.sh script every 5 minutes by using the following cron:
 
-        `*/5 * * * * ./var/healthchecker.sh`
+        `<*/5 * * * * ./var/healthchecker.sh:>`
         
 It must be noted that this cron needs to be added to the userdata as well to ensure that it is configured for every worker node in the nodegroup. Steps on how to setup a cron can be found [here](https://phoenixnap.com/kb/set-up-cron-job-linux).
 
