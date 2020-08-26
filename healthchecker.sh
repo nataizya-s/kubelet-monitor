@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #VARIABLES
-s3_bucket="aws-nasika-logs"
+s3_bucket=<S3-Bucket-Name>
 az=$(wget -q -O - http://169.254.169.254/latest/meta-data/placement/availability-zone)
 region=${az::-1}
 
@@ -17,7 +17,6 @@ Inactive="Active: inactive (dead)"
 state="false"
 if [[ "$check" == *"$Active"* ]]; then
   echo "Kubelet is active"
-  #aws autoscaling set-instance-health --instance-id $instance_id --health-status Unhealthy
 else
   for i in {1..5}
   do
