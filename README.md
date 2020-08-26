@@ -9,7 +9,7 @@ This script can be added to the userdata of the worker nodes (i.e. via the launc
 ## Prerequisites
 ### IAM Permissions on Node Instance Role
 | IAM Action        | Reason      |
-| ------------- |:-------------:| -----:|
+| ------------- |:-------------:| 
 | ec2:TerminateInstances | This will be needed to allow the script to terminate the instance when the kubelet fails to start. | 
 | s3:PutObject | This will be used to push the collected logs from the instance to a the specified S3 bucket |
 
