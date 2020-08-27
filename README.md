@@ -1,5 +1,6 @@
 # kubelet-monitor
-A script to allow the kubelet on AWS EKS worker nodes to be monitored and automatically restarted if failing.
+A script to allow the kubelet on AWS EKS worker nodes to be monitored and automatically restarted if failing. The systemd service does define a "Restart=on-failure" that should restart the kubelet when it fails. However, this script adds an additional layer of redundancy to ensure that the kubelet service always recovers. 
+
 If the restart of the kubelet fails (after 5 attempts), the logs on the node are collected and the node is automatically terminated. 
 
 The logs on the worker node are collected using the script [here](https://github.com/nithu0115/eks-logs-collector).
